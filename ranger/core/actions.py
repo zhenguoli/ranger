@@ -481,14 +481,15 @@ class Actions(  # pylint: disable=too-many-instance-attributes,too-many-public-m
     # -- Moving Around
     # --------------------------
 
-    def move(self,  # pylint: disable=too-many-locals,too-many-branches,too-many-statements
-             narg=None, **kw):
+    def move(self, # pylint: disable=too-many-locals,too-many-branches,too-many-statements
+             narg=None, openfile=0, **kw):
         """A universal movement method.
 
         Accepts these parameters:
         (int) down, (int) up, (int) left, (int) right, (int) to,
         (bool) absolute, (bool) relative, (bool) pages,
         (bool) percentage
+        (bool) openfile
 
         to=X is translated to down=X, absolute=True
 
@@ -526,9 +527,10 @@ class Actions(  # pylint: disable=too-many-instance-attributes,too-many-public-m
             if tfile.is_directory:
                 self.thistab.enter_dir(tfile)
             elif selection:
-                result = self.execute_file(selection, mode=mode)
-                if result in (False, ASK_COMMAND):
-                    self.open_console('open_with ')
+                if openfile:
+                    result = self.execute_file(selection, mode=mode)
+                    if result in (False, ASK_COMMAND):
+                        self.open_console('open_with ')
         elif direction.vertical() and cwd.files:
             pos_new = direction.move(
                 direction=direction.down(),
